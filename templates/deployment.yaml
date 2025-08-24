@@ -24,11 +24,11 @@ spec:
           ports:
             - containerPort: {{ .Values.deployment.ports.http.containerPort }}
               name: {{ .Values.deployment.ports.http.name }}
-          {{- if .Values.deployment.probes.readiness }}
+          {{- if and .Values.deployment.probes .Values.deployment.probes.readiness }}
           readinessProbe:
             {{- toYaml .Values.deployment.probes.readiness | nindent 12 }}
           {{- end }}
-          {{- if .Values.deployment.probes.liveness }}
+          {{- if and .Values.deployment.probes .Values.deployment.probes.liveness }}
           livenessProbe:
             {{- toYaml .Values.deployment.probes.liveness | nindent 12 }}
           {{- end }}

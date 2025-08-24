@@ -1,0 +1,120 @@
+app:
+  name: quarkus-app
+  replicas: 2
+
+hpa:
+  enabled: true
+  name: quarkus-hpa
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    cpu:
+      averageUtilization: 70
+    memory:
+      averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      selectPolicy: Max
+      policies:
+        percent:
+          value: 100
+          periodSeconds: 60
+        pods:
+          value: 4
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      selectPolicy: Min
+      policies:
+        percent:
+          value: 30
+          periodSeconds: 60
+
+deployment:
+  name: quarkus
+  image: YOUR_REGISTRY/your-quarkus-image:TAG
+  imagePullPolicy: IfNotPresent
+  env:
+    quarkusHttpPort: "8080"
+  ports:
+    http:
+      containerPort: 8080
+      name: http
+  probes:
+    readiness:
+      path: /q/health/ready
+      port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 2
+      failureThreshold: 6
+    liveness:
+      path: /q/health/live
+      port: 8080
+  tolerations:
+    - key: "ambiente"
+      operator: "Equal"
+      value: "des"
+      effect: "NoSchedule"
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "500Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+
+configMap:
+  name: quarkus-configmap
+  namespace: default
+  data:
+    chave1: valor1
+    chave2: valor2
+    chave3: valor3
+
+service:
+  name: quarkus-clusterip
+  labels:
+    app: quarkus-clusterip
+  type: ClusterIP
+  selector:
+    app: quarkus-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+
+gateway:
+  name: quarkus-gateway
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "example.com"
+        - "another-example.com"
+
+virtualService:
+  name: quarkus-virtualservice
+  hosts:
+    - "*"
+  gateways:
+    - quarkus-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /api
+      route:
+        - destination:
+            host: quarkus-service
+            port: 8080

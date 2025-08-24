@@ -1,0 +1,6 @@
+---
+apiVersion: v2
+appVersion: latest
+description: Helm chart para deploy da aplicação Quarkus
+name: quarkus-app
+version: 1.0.0

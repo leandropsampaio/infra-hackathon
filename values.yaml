@@ -114,8 +114,9 @@ virtualService:
     - match:
         - uri:
             prefix: /api
+      rewrite:
+        uri: /
       route:
         - destination:
             host: quarkus-service
-            port: 80
-
+            port: 8080

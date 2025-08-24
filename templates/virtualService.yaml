@@ -18,6 +18,10 @@ spec:
     - uri:
         prefix: {{ .uri.prefix | quote }}
 {{- end }}
+    {{- if .rewrite }}
+    rewrite:
+      uri: {{ .rewrite.uri | quote }}
+    {{- end }}
     route:
 {{- range .route }}
     - destination:

@@ -117,4 +117,5 @@ virtualService:
       route:
         - destination:
             host: quarkus-service
-            port: 8080
+            port: 80
+

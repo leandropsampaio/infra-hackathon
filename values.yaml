@@ -41,17 +41,17 @@ deployment:
     http:
       containerPort: 8080
       name: http
-  probes:
-    readiness:
-      path: /q/health/ready
-      port: 8080
-      initialDelaySeconds: 5
-      periodSeconds: 10
-      timeoutSeconds: 2
-      failureThreshold: 6
-    liveness:
-      path: /q/health/live
-      port: 8080
+  # probes:
+  #   readiness:
+  #     path: /q/health/ready
+  #     port: 8080
+  #     initialDelaySeconds: 5
+  #     periodSeconds: 10
+  #     timeoutSeconds: 2
+  #     failureThreshold: 6
+  #   liveness:
+  #     path: /q/health/live
+  #     port: 8080
   tolerations:
     - key: "ambiente"
       operator: "Equal"

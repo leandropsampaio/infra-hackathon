@@ -67,16 +67,15 @@ deployment:
 
 configMap:
   name: quarkus-configmap
-  namespace: default
   data:
     chave1: valor1
     chave2: valor2
     chave3: valor3
 
 service:
-  name: quarkus-clusterip
+  name: quarkus-service
   labels:
-    app: quarkus-clusterip
+    app: quarkus-service
   type: ClusterIP
   selector:
     app: quarkus-app

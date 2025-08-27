@@ -4,7 +4,6 @@ metadata:
   name: {{ .Values.app.name }}
   labels:
     app: {{ .Values.app.name }}
-  namespace: {{ .Values.app.namespace }}
 spec:
   replicas: {{ .Values.app.replicas }}
   selector:
@@ -40,4 +39,5 @@ spec:
       {{- if .Values.deployment.tolerations }}
       tolerations:
         {{- toYaml .Values.deployment.tolerations | nindent 8 }}
+
       {{- end }}

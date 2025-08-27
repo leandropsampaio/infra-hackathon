@@ -1,6 +1,5 @@
 app:
   name: quarkus-app
-  namespace: des
   replicas: 2
 
 hpa:
@@ -113,3 +112,4 @@ virtualService:
         - destination:
             host: quarkus-service
             port: 8080
+

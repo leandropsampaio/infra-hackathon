@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}
+  labels:
+    app: {{ .Values.app.name }}
+  namespace: {{ .Values.app.namespace }}
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      containers:
+        - name: {{ .Values.deployment.name }}
+          image: {{ .Values.deployment.image }}
+          imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          env:
+            - name: QUARKUS_HTTP_PORT
+              value: "{{ .Values.deployment.env.quarkusHttpPort }}"
+          ports:
+            - containerPort: {{ .Values.deployment.ports.http.containerPort }}
+              name: {{ .Values.deployment.ports.http.name }}
+          {{- if and .Values.deployment.probes .Values.deployment.probes.readiness }}
+          readinessProbe:
+            {{- toYaml .Values.deployment.probes.readiness | nindent 12 }}
+          {{- end }}
+          {{- if and .Values.deployment.probes .Values.deployment.probes.liveness }}
+          livenessProbe:
+            {{- toYaml .Values.deployment.probes.liveness | nindent 12 }}
+          {{- end }}
+          {{- if .Values.deployment.resources }}
+          resources:
+            {{- toYaml .Values.deployment.resources | nindent 12 }}
+          {{- end }}
+      {{- if .Values.deployment.tolerations }}
+      tolerations:
+        {{- toYaml .Values.deployment.tolerations | nindent 8 }}
+      {{- end }}

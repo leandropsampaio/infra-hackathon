@@ -1,5 +1,6 @@
 app:
   name: quarkus-app
+  namespace: des
   replicas: 2
 
 hpa:
@@ -95,13 +96,6 @@ gateway:
         protocol: HTTP
       hosts:
         - "*"
-    - port:
-        number: 443
-        name: https
-        protocol: HTTPS
-      hosts:
-        - "example.com"
-        - "another-example.com"
 
 virtualService:
   name: quarkus-virtualservice
